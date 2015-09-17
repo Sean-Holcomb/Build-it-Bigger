@@ -25,7 +25,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // Added for AdMob
+    testCompile "junit:junit:4.11"
     compile project(':jokelib')
     compile project(':jokeactivity')
     compile 'com.android.support:appcompat-v7:22.+'
