@@ -1,24 +1,27 @@
 package com.udacity.gradle.builditbigger.free;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.udacity.gradle.builditbigger.R;
-import com.example.seanholcomb.jokeactivity.JokeActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.builditbigger.EndpointsAsyncTask;
+import com.udacity.gradle.builditbigger.R;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+
+    InterstitialAd mInterstitialAd;
 
     public MainActivityFragment() {
     }
@@ -32,9 +35,26 @@ public class MainActivityFragment extends Fragment {
         jokeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new EndpointsAsyncTask().execute(getActivity());
+
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.not_loaded_toast), Toast.LENGTH_SHORT).show();
+                }
             }
         });
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                new EndpointsAsyncTask().execute(getActivity());
+                requestNewInterstitial();
+            }
+        });
+
+        requestNewInterstitial();
 
 
         AdView mAdView = (AdView) root.findViewById(R.id.adView);
@@ -48,9 +68,11 @@ public class MainActivityFragment extends Fragment {
         return root;
     }
 
-    public void displayJoke(String joke){
-        Intent intent =new Intent(getActivity(), JokeActivity.class);
-        intent.putExtra("EXTRA_STRING", joke);
-        startActivity(intent);
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 }

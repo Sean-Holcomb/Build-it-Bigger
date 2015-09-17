@@ -1,14 +1,11 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import com.example.seanholcomb.jokeactivity.JokeActivity;
 
 
 /**
@@ -35,9 +32,4 @@ public class MainActivityFragment extends Fragment {
         return root;
     }
 
-    public void displayJoke(String joke){
-        Intent intent =new Intent(getActivity(), JokeActivity.class);
-        intent.putExtra("EXTRA_STRING", joke);
-        startActivity(intent);
-    }
 }
