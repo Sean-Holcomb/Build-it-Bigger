@@ -13,7 +13,7 @@ public class AsyncTestCase extends AndroidTestCase {
         String joke = "";
         try {
             EndpointsAsyncTask jokeTask = new EndpointsAsyncTask();
-            jokeTask.execute(getContext());
+            jokeTask.execute(new ButtonPackage(getContext(), null, null));
             joke = jokeTask.get(30, TimeUnit.SECONDS);
         } catch (Exception e) {
             fail("Timed out");

@@ -16,4 +16,25 @@ allprojects {
     repositories {
         jcenter()
     }
+
 }
+
+task testTaskOpen (dependsOn: ":jokebackend:appengineRun"){
+    evaluationDependsOn ":jokebackend"
+
+    project(":jokebackend"){
+        appengine{
+            daemon true
+        }
+    }
+    finalizedBy ':app:connectedAndroidTest'
+
+}
+//This task start up the GCE dev server, run all Android tests,
+//and shutdown the dev server
+task testTaskClose (dependsOn: 'testTaskOpen'){
+    mustRunAfter 'testTaskOpen'
+    finalizedBy 'jokebackend:appengineStop'
+}
+
+

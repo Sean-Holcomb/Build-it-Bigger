@@ -49,7 +49,9 @@ public class EndpointsAsyncTask extends AsyncTask<ButtonPackage, Void, String> {
         Intent intent =new Intent(context, JokeActivity.class);
         intent.putExtra("EXTRA_STRING", result);
         context.startActivity(intent);
-        spinner.setVisibility(View.INVISIBLE);
-        jokeButton.setVisibility(View.VISIBLE);
+        if (spinner != null && jokeButton !=null) {
+            spinner.setVisibility(View.INVISIBLE);
+            jokeButton.setVisibility(View.VISIBLE);
+        }
     }
 }
