@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.udacity.gradle.builditbigger.ButtonPackage;
 import com.udacity.gradle.builditbigger.EndpointsAsyncTask;
 import com.udacity.gradle.builditbigger.R;
 
@@ -22,6 +24,8 @@ import com.udacity.gradle.builditbigger.R;
 public class MainActivityFragment extends Fragment {
 
     InterstitialAd mInterstitialAd;
+    private ProgressBar spinner;
+    private Button jokeButton;
 
     public MainActivityFragment() {
     }
@@ -31,7 +35,9 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button jokeButton = (Button) root.findViewById(R.id.joke_button);
+        jokeButton = (Button) root.findViewById(R.id.joke_button);
+        spinner = (ProgressBar) root.findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE);
         jokeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +55,10 @@ public class MainActivityFragment extends Fragment {
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                new EndpointsAsyncTask().execute(getActivity());
+                EndpointsAsyncTask task = new EndpointsAsyncTask();
+                task.execute(new ButtonPackage(getActivity(), spinner, jokeButton));
+                spinner.setVisibility(View.VISIBLE);
+                jokeButton.setVisibility(View.INVISIBLE);
                 requestNewInterstitial();
             }
         });
